@@ -9,6 +9,12 @@ import lombok.Setter;
 @Setter @Getter
 @NoArgsConstructor @AllArgsConstructor
 public class Employee {
-    private int employee;
+    private int employee_id;
     private String employee_name;
+
+    @Override
+    public String toString() {
+        return "사원명 : " + employee_name + "\n" +
+                "사원 아이디 : " + employee_id;
+    }
 }

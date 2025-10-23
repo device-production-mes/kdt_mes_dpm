@@ -41,11 +41,20 @@ public class ProductDao {
             System.out.print("모델명: ");
             product.setModel_number(SC.next());
             result = jdbcTemplate.update(sql, product.getProduct_name(), product.getModel_number());
-
+            insertBomId();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return result > 0;
+    }
+
+    public void insertBomId() {
+        String sql = "insert into bom values (bom_seq.NEXTVAL, (select max(product_id) from product))";
+        try {
+            jdbcTemplate.update(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
