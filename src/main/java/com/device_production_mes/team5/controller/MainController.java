@@ -69,5 +69,18 @@ public class MainController {
             }
         }
     }
+
+    private void employeeController() {
+        while (true) {
+            // 1번 직원등록 2번 직원조회 3번 돌아가기
+        }
+    }
+
+    private void shipmentController() {
+        while (true) {
+            // 1번 출하등록 2번 출하내역조회 3번 돌아가기
+            // 주의 - 출하등록 시 어떤 product_id에 대한 출하인지 사용자에게 먼저 입력 받아야함
+        }
+    }
 }
 
