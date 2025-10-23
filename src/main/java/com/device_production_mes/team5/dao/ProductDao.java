@@ -41,11 +41,10 @@ public class ProductDao {
             System.out.print("모델명: ");
             product.setModel_number(SC.next());
             result = jdbcTemplate.update(sql, product.getProduct_name(), product.getModel_number());
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
-
         return result > 0;
     }
 }

@@ -1,6 +1,8 @@
 package com.device_production_mes.team5.controller;
 
+import com.device_production_mes.team5.dao.EmployeeDao;
 import com.device_production_mes.team5.dao.ProductDao;
+import com.device_production_mes.team5.model.Employee;
 import com.device_production_mes.team5.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,10 +14,12 @@ import java.util.Scanner;
 public class MainController {
     private static final Scanner SC = new Scanner(System.in);
     private final ProductDao productDao;
+    private final EmployeeDao employeeDao;
 
     @Autowired
-    public MainController(ProductDao productDao) {
+    public MainController(ProductDao productDao, EmployeeDao employeeDao) {
         this.productDao = productDao;
+        this.employeeDao = employeeDao;
     }
 
     public void menu() {
@@ -29,6 +33,7 @@ public class MainController {
                 case 2:
                     break;
                 case 3:
+                    employeeController();
                     break;
                 case 4:
                     break;
@@ -73,6 +78,24 @@ public class MainController {
     private void employeeController() {
         while (true) {
             // 1번 직원등록 2번 직원조회 3번 돌아가기
+            System.out.println("[1] 직원 등록 [2] 직원 조회 [3] 돌아가기");
+            int select = SC.nextInt();
+            switch (select) {
+                case 1:
+                    boolean result = employeeDao.insertEmployee();
+                    System.out.println(result ? "정상 등록 되었습니다." : "등록 실패");
+                    break;
+                case 2 :
+                    List<Employee> list = employeeDao.selectEmployee();
+                    for (Employee employee : list) {
+                        System.out.println(employee);
+                    }
+                    break;
+                case 3 :
+                    return;
+                default :
+                    System.out.println("잘못 입력하셨습니다.");
+            }
         }
     }
 
