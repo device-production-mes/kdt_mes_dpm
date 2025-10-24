@@ -1,6 +1,6 @@
 package com.device_production_mes.team5.dao;
 
-import com.device_production_mes.team5.model.Employee;
+import com.device_production_mes.team5.dto.Employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

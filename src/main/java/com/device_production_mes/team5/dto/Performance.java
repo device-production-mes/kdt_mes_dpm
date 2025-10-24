@@ -1,11 +1,10 @@
-package com.device_production_mes.team5.model;
+package com.device_production_mes.team5.dto;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 

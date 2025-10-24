@@ -1,4 +1,4 @@
-package com.device_production_mes.team5.model;
+package com.device_production_mes.team5.dto;
 
 import lombok.*;
 

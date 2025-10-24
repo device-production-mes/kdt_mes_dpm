@@ -1,8 +1,7 @@
 package com.device_production_mes.team5.dao;
 
-import com.device_production_mes.team5.model.BomDetail;
-import com.device_production_mes.team5.model.Part;
-import com.device_production_mes.team5.model.Quantity;
+import com.device_production_mes.team5.dto.Part;
+import com.device_production_mes.team5.vo.Quantity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.device_production_mes.team5.dto;
+package com.device_production_mes.team5.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

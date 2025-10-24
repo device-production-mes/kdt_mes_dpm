@@ -1,7 +1,9 @@
 package com.device_production_mes.team5.controller;
 
 import com.device_production_mes.team5.dao.*;
-import com.device_production_mes.team5.model.*;
+import com.device_production_mes.team5.dto.*;
+import com.device_production_mes.team5.vo.Quantity;
+import com.device_production_mes.team5.vo.Sp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -144,6 +146,10 @@ public class MainController {
         while (true) {
             // 1번 출하등록 2번 출하내역조회 3번 돌아가기
             // 주의 - 출하등록 시 어떤 product_id에 대한 출하인지 사용자에게 먼저 입력 받아야함
+            // 추가사항 - 출하 등록 수정
+            //           inventory 테이블에 임시데이터 추가 후
+            //           실제 완제품 재고보다 출하 수량이 많을 경우 출력 문으로 재고가 부족합니다. 를 출력 후
+            //           출하 등록을 하지 않고 반환
             System.out.println("[1]출하등록 [2]출하내역조회 [3]돌아가기");
             System.out.print(">> ");
             switch (SC.nextInt()) {
@@ -161,9 +167,9 @@ public class MainController {
                     break;
 
                 case 2:
-                    List<Shipment> list2 = shipmentDao.selectShipment();
-                    for (Shipment shipment : list2) {
-                        System.out.println(shipment);
+                    List<Sp> list2 = shipmentDao.selectShipment();
+                    for (Sp sp : list2) {
+                        System.out.println(sp);
                     }
                     break;
 
