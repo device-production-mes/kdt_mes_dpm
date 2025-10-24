@@ -41,12 +41,10 @@ public class ShipmentDao {
         int result = 0;
         int currentInventory = 0;
         try {
-            String Sql = "SELECT SUM(current_stock) FROM inventory WHERE product_id = ?";
+            String Sql = "SELECT current_stock FROM inventory WHERE product_id = ?";
             Integer count = jdbcTemplate.queryForObject(Sql, Integer.class, product_id);
             if (count != null) {
                 currentInventory = count;
-            } else {
-                currentInventory = 0;
             }
             if (shipmentQuantity > currentInventory) {
                 throw new RuntimeException("재고 부족");
