@@ -18,14 +18,16 @@ public class MainController {
     private final EmployeeDao employeeDao;
     private final InventoryDao inventoryDao;
     private final ShipmentDao shipmentDao;
+    private final WorkOrderDao workOrderDao;
 
     @Autowired
-    public MainController(ProductDao productDao, BomDao bomDao, EmployeeDao employeeDao, InventoryDao inventoryDao, ShipmentDao shipmentDao) {
+    public MainController(ProductDao productDao, BomDao bomDao, EmployeeDao employeeDao, InventoryDao inventoryDao, ShipmentDao shipmentDao, WorkOrderDao workOrderDao) {
         this.productDao = productDao;
         this.bomDao = bomDao;
         this.employeeDao = employeeDao;
         this.inventoryDao = inventoryDao;
         this.shipmentDao = shipmentDao;
+        this.workOrderDao = workOrderDao;
     }
 
     public void menu() {
@@ -43,6 +45,7 @@ public class MainController {
                     employeeController();
                     break;
                 case 4:
+                    workOrderController();
                     break;
                 case 5:
                     break;
@@ -140,6 +143,25 @@ public class MainController {
                     System.out.println("잘못 입력하셨습니다.");
             }
         }
+    }
+
+    private void workOrderController() {
+        System.out.println("공정 등록을 시작합니다.");
+        List<Product> list = productDao.selectProduct();
+        System.out.println("제품ID \t 제품명");
+        for (Product product : list) {
+            System.out.println(product.getProduct_id() + " \t " + product.getProduct_name());
+        }
+        WorkOrder workOrder = new WorkOrder();
+        System.out.println("등록할 제품의 id를 입력해 주세요.");
+        System.out.print(">> ");
+        workOrder.setProduct_id(SC.nextInt());
+        System.out.println("생산할 수량을 입력해 주세요.");
+        System.out.print(">> ");
+        workOrder.setQuantity(SC.nextInt());
+        workOrder.setStatus(Status.IN_PROGRESS);
+        boolean result = workOrderDao.insertWorkOrder(workOrder);
+        System.out.println(result ? "공정 등록이 완료 되었습니다.\n공정 관리에서 프로세스를 등록해 주세요." : "등록 실패");
     }
 
     private void shipmentController() {

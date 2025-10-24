@@ -15,5 +15,5 @@ public class WorkOrder {
     private int product_id;
     private int quantity;
     private LocalDateTime start_date;
-    private String status;
+    private Status status;
 }
