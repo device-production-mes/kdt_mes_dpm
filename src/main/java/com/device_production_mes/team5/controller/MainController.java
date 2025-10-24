@@ -2,8 +2,10 @@ package com.device_production_mes.team5.controller;
 
 import com.device_production_mes.team5.dao.*;
 import com.device_production_mes.team5.dto.*;
+import com.device_production_mes.team5.vo.ProcessSel;
 import com.device_production_mes.team5.vo.Quantity;
 import com.device_production_mes.team5.vo.Sp;
+import com.device_production_mes.team5.vo.Wp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,20 +21,22 @@ public class MainController {
     private final InventoryDao inventoryDao;
     private final ShipmentDao shipmentDao;
     private final WorkOrderDao workOrderDao;
+    private final ProcessDao processDao;
 
     @Autowired
-    public MainController(ProductDao productDao, BomDao bomDao, EmployeeDao employeeDao, InventoryDao inventoryDao, ShipmentDao shipmentDao, WorkOrderDao workOrderDao) {
+    public MainController(ProductDao productDao, BomDao bomDao, EmployeeDao employeeDao, InventoryDao inventoryDao, ShipmentDao shipmentDao, WorkOrderDao workOrderDao, ProcessDao processDao) {
         this.productDao = productDao;
         this.bomDao = bomDao;
         this.employeeDao = employeeDao;
         this.inventoryDao = inventoryDao;
         this.shipmentDao = shipmentDao;
         this.workOrderDao = workOrderDao;
+        this.processDao = processDao;
     }
 
     public void menu() {
         while (true) {
-            System.out.println("[1]제품 관리 [2]자재 관리 [3]직원 관리 [4]공정 등록 [5]공정 관리 [6]완제품 조회 [7]출하 관리 [8]종료");
+            System.out.println("[1]제품 관리 [2]자재 관리 [3]직원 관리 [4]작업 등록 [5]공정 관리 [6]완제품 조회 [7]출하 관리 [8]종료");
             System.out.print(">> ");
             switch (SC.nextInt()) {
                 case 1:
@@ -48,6 +52,7 @@ public class MainController {
                     workOrderController();
                     break;
                 case 5:
+                    processController();
                     break;
                 case 6:
                     inventoryController();
@@ -123,7 +128,7 @@ public class MainController {
     private void employeeController() {
         while (true) {
             // 1번 직원등록 2번 직원조회 3번 돌아가기
-            System.out.println("[1] 직원 등록 [2] 직원 조회 [3] 돌아가기");
+            System.out.println("[1]직원 등록 [2]직원 조회 [3]돌아가기");
             System.out.print(">> ");
             int select = SC.nextInt();
             switch (select) {
@@ -162,6 +167,61 @@ public class MainController {
         workOrder.setStatus(Status.IN_PROGRESS);
         boolean result = workOrderDao.insertWorkOrder(workOrder);
         System.out.println(result ? "공정 등록이 완료 되었습니다.\n공정 관리에서 프로세스를 등록해 주세요." : "등록 실패");
+    }
+
+    private void processController() {
+        while (true) {
+            System.out.println("[1]프로세스 등록 [2]공정 조회 [3]공정 취소 [4]돌아가기");
+            System.out.print(">> ");
+            if(SC.hasNextInt()) {
+                switch (SC.nextInt()) {
+                    case 1:
+                        System.out.println("프로세스 등록을 시작합니다.");
+                        List<Wp> list = workOrderDao.selectInProgressWorkOrder();
+                        System.out.println("작업ID \t 제품명");
+                        for (Wp wp : list) {
+                            System.out.println(wp.getWork_order_id() + " \t " + wp.getProduct_name());
+                        }
+                        System.out.println("프로세스를 등록 할 작업ID를 입력해 주세요.");
+                        System.out.print(">> ");
+                        int inputId = SC.nextInt();
+                        if(workOrderDao.searchWorkOrderId(list, inputId)) {
+                            boolean result = processDao.insertProcess(inputId);
+                            System.out.println(result ? "프로세스 등록이 완료 되었습니다." : "");
+                        }
+                        break;
+                    case 2:
+                        List<ProcessSel> list2 = processDao.selectProcess();
+                        for (ProcessSel processSel : list2) {
+                            System.out.println(processSel);
+                        }
+                        break;
+                    case 3:
+                        List<Wp> list3 = workOrderDao.selectInProgressWorkOrder();
+                        System.out.println("작업ID \t 제품명 \t\t\t 생산수량 \t 작업상태");
+                        for (Wp wp : list3) {
+                            System.out.print(wp.getWork_order_id() + " \t " + wp.getProduct_name() + " \t " + wp.getQuantity() + " \t\t " + wp.getStatus() + "\n");
+                        }
+                        System.out.println("취소할 작업ID를 입력해 주세요");
+                        System.out.print(">> ");
+                        int inputId2 = SC.nextInt();
+                        if(workOrderDao.searchWorkOrderId(list3, inputId2)) {
+                            workOrderDao.cancelWorkOrder(inputId2);
+                            System.out.println("작업이 취소 되었습니다.");
+                            return;
+                        }
+                        break;
+                    case 4:
+                        return;
+                    default:
+                        System.out.println("잘못 입력하셨습니다.");
+                        break;
+                }
+            } else {
+                System.out.println("잘못 입력하셨습니다.");
+                SC.next();
+            }
+        }
     }
 
     private void shipmentController() {

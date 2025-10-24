@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Process {
     private int process_id;
     private int work_order_id;
-    private String process_type;
+    private ProcessType process_type;
     private LocalDateTime start_time;
     private LocalDateTime end_time;
     private int employee_id;
