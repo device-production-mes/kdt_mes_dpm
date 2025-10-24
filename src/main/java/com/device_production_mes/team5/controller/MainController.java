@@ -79,9 +79,10 @@ public class MainController {
                     System.out.println(result ? "정상 등록 되었습니다." : "등록 실패");
                     break;
                 case 2:
-                    List<Product> list = productDao.selectProduct();
+                    List<Product> list = productDao.selectProducts();
+                    System.out.println("제품ID \t 제품명 \t\t\t\t 모델명");
                     for (Product product : list) {
-                        System.out.println(product);
+                        System.out.println(product.getProduct_id() + " \t " + product.getProduct_name() + " \t\t " + product.getModel_number());
                     }
                     break;
                 case 3:
@@ -150,8 +151,8 @@ public class MainController {
     }
 
     private void workOrderController() {
+        List<Product> list = productDao.selectProducts();
         System.out.println("공정 등록을 시작합니다.");
-        List<Product> list = productDao.selectProduct();
         System.out.println("제품ID \t 제품명");
         for (Product product : list) {
             System.out.println(product.getProduct_id() + " \t " + product.getProduct_name());

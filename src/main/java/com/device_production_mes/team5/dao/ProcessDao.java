@@ -41,7 +41,7 @@ public class ProcessDao {
         } else {
             return false;
         }
-        sql = "insert into process values (process_seq.NEXTVAL, ?, ?, sysdate, null, ?)";
+        sql = "insert into process values (process_seq.NEXTVAL, ?, ?, default, default, ?)";
         try {
             result = jdbcTemplate.update(sql, process.getWork_order_id(), process.getProcess_type().toString(), process.getEmployee_id());
         } catch (Exception e) {
