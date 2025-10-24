@@ -14,7 +14,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "사원명 : " + employee_name + "\n" +
-                "사원 아이디 : " + employee_id;
+        return "사원 아이디 : " + employee_id + "\n" +
+                "사원명 : " + employee_name;
     }
 }

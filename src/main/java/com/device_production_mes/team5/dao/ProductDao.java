@@ -16,7 +16,7 @@ public class ProductDao {
 
     public List<Product> selectProduct() {
         List<Product> list = null;
-        String sql = "select * from product order by product_id";
+        String sql = "select p.* from product p join inventory inv on p.product_id = inv.product_id order by p.product_id";
         try {
             list = jdbcTemplate.query(sql, (rs, rowNum) ->
                     new Product(

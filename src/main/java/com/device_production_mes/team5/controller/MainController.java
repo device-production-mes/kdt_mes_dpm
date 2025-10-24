@@ -2,10 +2,7 @@ package com.device_production_mes.team5.controller;
 
 import com.device_production_mes.team5.dao.*;
 import com.device_production_mes.team5.dto.*;
-import com.device_production_mes.team5.vo.ProcessSel;
-import com.device_production_mes.team5.vo.Quantity;
-import com.device_production_mes.team5.vo.Sp;
-import com.device_production_mes.team5.vo.Wp;
+import com.device_production_mes.team5.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +19,10 @@ public class MainController {
     private final ShipmentDao shipmentDao;
     private final WorkOrderDao workOrderDao;
     private final ProcessDao processDao;
+    private final PerformanceDao performanceDao;
 
     @Autowired
-    public MainController(ProductDao productDao, BomDao bomDao, EmployeeDao employeeDao, InventoryDao inventoryDao, ShipmentDao shipmentDao, WorkOrderDao workOrderDao, ProcessDao processDao) {
+    public MainController(ProductDao productDao, BomDao bomDao, EmployeeDao employeeDao, InventoryDao inventoryDao, ShipmentDao shipmentDao, WorkOrderDao workOrderDao, ProcessDao processDao, PerformanceDao performanceDao) {
         this.productDao = productDao;
         this.bomDao = bomDao;
         this.employeeDao = employeeDao;
@@ -32,6 +30,7 @@ public class MainController {
         this.shipmentDao = shipmentDao;
         this.workOrderDao = workOrderDao;
         this.processDao = processDao;
+        this.performanceDao = performanceDao;
     }
 
     public void menu() {
@@ -171,7 +170,7 @@ public class MainController {
 
     private void processController() {
         while (true) {
-            System.out.println("[1]프로세스 등록 [2]공정 조회 [3]공정 취소 [4]돌아가기");
+            System.out.println("[1]프로세스 등록 [2]공정 조회 [3]공정 취소 [4]완료된 공정 관리 [5]돌아가기");
             System.out.print(">> ");
             if(SC.hasNextInt()) {
                 switch (SC.nextInt()) {
@@ -212,6 +211,51 @@ public class MainController {
                         }
                         break;
                     case 4:
+                        performanceController();
+                        break;
+                    case 5:
+                        return;
+                    default:
+                        System.out.println("잘못 입력하셨습니다.");
+                        break;
+                }
+            } else {
+                System.out.println("잘못 입력하셨습니다.");
+                SC.next();
+            }
+        }
+    }
+
+    private void performanceController() {
+        while (true) {
+            System.out.println("[1]완료된 공정 등록 [2]공정 결과 조회 [3]돌아가기");
+            System.out.print(">> ");
+            if (SC.hasNextInt()) {
+                switch (SC.nextInt()) {
+                    case 1:
+                        List<ProcessSel> list = processDao.selectProcess();
+                        for (ProcessSel processSel : list) {
+                            if(processSel.getStatus().equals("IN_PROGRESS")) System.out.println(processSel);
+                        }
+                        System.out.println("작업을 끝낸 프로세스ID를 입력해 주세요.");
+                        System.out.print(">> ");
+                        int inputId = SC.nextInt();
+                        int quantity = PerformanceDao.searchProcessId(list, inputId);
+                        if(quantity == 0) {
+                            System.out.println("잘못 입력하셨습니다.");
+                            return;
+                        }
+                        boolean result = performanceDao.insertPerformance(inputId, quantity);
+                        System.out.println(result ? "완료 되었습니다." : "");
+                        break;
+                    case 2:
+                        List<Pp> list2 = performanceDao.selectPerformance();
+                        System.out.println("제품명 \t\t 양품 \t 불량품 \t\t 검사 일자");
+                        for (Pp pp : list2) {
+                            System.out.println(pp.getProduct_name() + " \t  " + pp.getGood_quantity() + " \t\t" + pp.getDefect_quantity() + " \t\t " + pp.getInspection_date().toString().substring(0, 10) + " " + pp.getInspection_date().toString().substring(11));
+                        }
+                        break;
+                    case 3:
                         return;
                     default:
                         System.out.println("잘못 입력하셨습니다.");
