@@ -1,8 +1,10 @@
 package com.device_production_mes.team5.dao;
 
+import com.device_production_mes.team5.dto.Inventory;
 import com.device_production_mes.team5.dto.Shipment;
 import com.device_production_mes.team5.vo.Sp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.http.client.HttpClientProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -32,18 +34,41 @@ public class ShipmentDao {
         }
         return list;
     }
-
     public boolean insertShipment(int product_id) {
+        System.out.print("출하 수량을 입력하세요: ");
+        int shipmentQuantity = SC.nextInt();
         String sql = "insert into shipment values (shipment_seq.NEXTVAL, ?, ?, sysdate)";
         int result = 0;
+        int currentInventory = 0;
         try {
-            Shipment shipment = new Shipment();
-            System.out.print("출하량 : ");
-            shipment.setQuantity(SC.nextInt());
-            result = jdbcTemplate.update(sql, product_id,
-                    shipment.getQuantity());
+            String Sql = "SELECT SUM(current_stock) FROM inventory WHERE product_id = ?";
+            Integer count = jdbcTemplate.queryForObject(Sql, Integer.class, product_id);
+            if (count != null) {
+                currentInventory = count;
+            } else {
+                currentInventory = 0;
+            }
+            if (shipmentQuantity > currentInventory) {
+                throw new RuntimeException("재고 부족");
+            }
+            result = jdbcTemplate.update(sql, product_id, shipmentQuantity);
+            if (result > 0) {
+                String inventoryUpdateSql = "update inventory set current_stock = current_stock - ? where product_id = ?";
+                jdbcTemplate.update(inventoryUpdateSql, shipmentQuantity, product_id);
+                System.out.println("출하 및 재고 업데이트 완료");
+            }
+            return true;
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("재고 부족")) {
+                System.out.printf("등록된 재고가 부족합니다. (재고: %d개, 요청: %d개)%n", currentInventory, shipmentQuantity);
+                return false;
+            }
+            System.err.println("출하 처리 중 예상치 못한 Runtime 오류가 발생했습니다.");
+            e.printStackTrace();
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
-        } return result > 0;
+            return false;
+        }
     }
 }
