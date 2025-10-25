@@ -1,15 +1,12 @@
 package com.device_production_mes.team5.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class Wp {
-    private int work_order_id;
-    private String product_name;
-    private int quantity;
-    private String status;
+    private final int work_order_id;
+    private final String product_name;
+    private final int quantity;
+    private final String status;
 }

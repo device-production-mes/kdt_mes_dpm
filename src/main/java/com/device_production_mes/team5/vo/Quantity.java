@@ -1,13 +1,10 @@
 package com.device_production_mes.team5.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class Quantity {
-    private String part_name;
-    private int quantity;
+    private final String part_name;
+    private final int quantity;
 }

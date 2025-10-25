@@ -1,13 +1,10 @@
 package com.device_production_mes.team5.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class Sb {
-    private int count;
-    private int product_id;
+    private final int count;
+    private final int product_id;
 }

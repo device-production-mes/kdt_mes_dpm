@@ -6,20 +6,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-@Getter @Setter
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class Sp {
-    private int shipment_id;
-    private String product_name;
-    private int quantity;
-    private LocalDateTime shipment_date;
+    private final int shipment_id;
+    private final String product_name;
+    private final int quantity;
+    private final LocalDateTime shipment_date;
 
     @Override
     public String toString() {
-        return "출하id : " + shipment_id + "\n" +
-                "제품명 : " + product_name + "\n" +
-                "출하 수량 : " + quantity + "\n" +
-                "출하 날짜 : " + shipment_date.toString().substring(0, 10) + " " + shipment_date.toString().substring(11);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String shipmentDateStr = (shipment_date != null)
+                ? shipment_date.format(formatter)
+                : "-";
+
+        return "출하 ID: " + shipment_id + "\n" +
+                "제품명: " + product_name + "\n" +
+                "출하 수량: " + quantity + "\n" +
+                "출하 날짜: " + shipmentDateStr + "\n" +
+                "-".repeat(40);
     }
 }

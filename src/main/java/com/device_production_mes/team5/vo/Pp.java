@@ -1,18 +1,15 @@
 package com.device_production_mes.team5.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class Pp {
-    private String product_name;
-    private int good_quantity;
-    private int defect_quantity;
-    private LocalDateTime inspection_date;
+    private final String product_name;
+    private final int good_quantity;
+    private final int defect_quantity;
+    private final LocalDateTime inspection_date;
 
 }
