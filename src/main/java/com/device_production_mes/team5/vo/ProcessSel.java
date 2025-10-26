@@ -16,24 +16,27 @@ public class ProcessSel {
     private final LocalDateTime start_time;
     private final LocalDateTime end_time;
     private final String employee_name;
+    private final int work_order_id;
 
     @Override
     public String toString() {
-        String processTypeKor;
-        switch (process_type) {
-            case "ASSEMBLY":
-                processTypeKor = "조립";
-                break;
-            case "SOFTWARE_INSTALL":
-                processTypeKor = "소프트웨어 설치";
-                break;
-            case "INSPECTION":
-                processTypeKor = "검사";
-                break;
-            default:
-                processTypeKor = process_type;
-                break;
+        String[] types = process_type.split(",\\s*");
+        for (int i = 0; i < types.length; i++) {
+            switch (types[i]) {
+                case "ASSEMBLY":
+                    types[i] = "조립";
+                    break;
+                case "SOFTWARE_INSTALL":
+                    types[i] = "소프트웨어 설치";
+                    break;
+                case "INSPECTION":
+                    types[i] = "검사";
+                    break;
+                default:
+                    break;
+            }
         }
+        String processType = String.join(", ", types);
 
         String statusKor;
         switch (status) {
@@ -60,7 +63,7 @@ public class ProcessSel {
 
         return "프로세스ID: " + process_id + "\n" +
                 "제품명: " + product_name + "\n" +
-                "작업: " + processTypeKor + "\n" +
+                "작업: " + processType + "\n" +
                 "공정 상태: " + statusKor + "\n" +
                 "작업 수량: " + quantity + "\n" +
                 "공정 시작일: " + startTimeStr + "\n" +

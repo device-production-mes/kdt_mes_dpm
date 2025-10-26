@@ -128,7 +128,7 @@ public class MainController {
     private void employeeController() {
         while (true) {
             // 1번 직원등록 2번 직원조회 3번 돌아가기
-            System.out.println("[1]직원 등록 [2]직원 조회 [3]돌아가기");
+            System.out.println("[1]직원 등록 [2]직원 조회 [3]직원 해고 [4]돌아가기");
             System.out.print(">> ");
             int select = SC.nextInt();
             switch (select) {
@@ -142,7 +142,22 @@ public class MainController {
                         System.out.println(employee);
                     }
                     break;
-                case 3 :
+                case 3:
+                    List<Employee> list2 = employeeDao.selectEmployee();
+                    for (Employee employee : list2) {
+                        System.out.println(employee);
+                    }
+                    System.out.println("해고 할 직원의 사원 아이디를 입력해 주세요.");
+                    System.out.print(">> ");
+                    int inputId = SC.nextInt();
+                    if(employeeDao.selectByIdEmployee(list2, inputId)) {
+                        boolean fire = employeeDao.deleteEmployee(inputId);
+                        System.out.println(fire ? "정상 처리 되었습니다." : "");
+                    } else {
+                        System.out.println("존재하지 않는 직원입니다.");
+                    }
+                    break;
+                case 4 :
                     return;
                 default :
                     System.out.println("잘못 입력하셨습니다.");
@@ -282,15 +297,23 @@ public class MainController {
             switch (SC.nextInt()) {
                 case 1:
                     List<Product> list = productDao.selectProduct();
-                    System.out.println("제품id\t제품명");
-                    for (Product product : list) {
-                        System.out.println(product.getProduct_id() + "\t\t" + product.getProduct_name());
+                    if (list.isEmpty()) {
+                        System.out.println("생산된 완제품이 없습니다.");
+                    } else {
+                        for (Product product : list) {
+                            System.out.println(product.getProduct_id() + "\t\t" + product.getProduct_name());
+                        }
+                        System.out.println("제품id\t제품명");
+                        System.out.println("출하 하실 제품의 id를 입력해 주세요.");
+                        System.out.print(">> ");
+                        int product_id = SC.nextInt();
+                        if (shipmentDao.compareId(list, product_id)) {
+                            boolean result = shipmentDao.insertShipment(product_id);
+                            System.out.println(result ? "정상등록 되었습니다." : "등록에 실패 하였습니다.");
+                        } else {
+                            System.out.println("잘못 입력하셨습니다.");
+                        }
                     }
-                    System.out.println("출하 하실 제품의 id를 입력해 주세요.");
-                    System.out.print(">> ");
-                    int product_id = SC.nextInt();
-                    boolean result = shipmentDao.insertShipment(product_id);
-                    System.out.println(result ? "정상등록 되었습니다." : "등록에 실패 하였습니다.");
                     break;
 
                 case 2:

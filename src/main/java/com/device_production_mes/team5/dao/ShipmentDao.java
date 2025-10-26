@@ -1,6 +1,7 @@
 package com.device_production_mes.team5.dao;
 
 import com.device_production_mes.team5.dto.Inventory;
+import com.device_production_mes.team5.dto.Product;
 import com.device_production_mes.team5.dto.Shipment;
 import com.device_production_mes.team5.vo.Sp;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +69,12 @@ public class ShipmentDao {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean compareId(List<Product> list, int productId) {
+        for (Product product : list) {
+            if (product.getProduct_id() == productId) return true;
+        }
+        return false;
     }
 }

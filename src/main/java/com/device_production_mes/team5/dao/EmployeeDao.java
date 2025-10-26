@@ -43,4 +43,27 @@ public class EmployeeDao {
         }
         return result > 0;
     }
+
+    public boolean selectByIdEmployee(List<Employee> list2, int inputId) {
+        for (Employee employee : list2) {
+            if(employee.getEmployee_id() == inputId) return true;
+        }
+        return false;
+    }
+
+    public boolean deleteEmployee(int employee_id) {
+        int result = 0;
+        System.out.println("정말 해고 하시겠습니까...? [y/n]");
+        System.out.print(">> ");
+        if (SC.next().equalsIgnoreCase("y")) {
+            String sql = "delete employee where employee_id = ?";
+            try {
+                result = jdbcTemplate.update(sql, employee_id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result > 0;
+    }
 }

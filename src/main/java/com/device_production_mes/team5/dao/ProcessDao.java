@@ -52,20 +52,32 @@ public class ProcessDao {
 
     public List<ProcessSel> selectProcess() {
         List<ProcessSel> list = null;
-        String sql = "select process_id, product_name, process_type, status, quantity, start_time, end_time, employee_name from process p join work_order w on p.work_order_id = w.work_order_id join product pr on w.product_id = pr.product_id join employee e on p.employee_id = e.employee_id";
+        String sql = "select process_id, product_name, process_type, status, quantity, start_time, end_time, employee_name, p.work_order_id from process p join work_order w on p.work_order_id = w.work_order_id join product pr on w.product_id = pr.product_id join employee e on p.employee_id = e.employee_id where p.process_id = (select min(p2.process_id) from process p2 where p2.work_order_id = p.work_order_id) order by process_id";
+
         try {
-            list = jdbcTemplate.query(sql, (rs, rowNum) ->
-                    new ProcessSel(
-                            rs.getInt("process_id"),
-                            rs.getString("product_name"),
-                            rs.getString("process_type"),
-                            rs.getString("status"),
-                            rs.getInt("quantity"),
-                            rs.getTimestamp("start_time").toLocalDateTime(),
-                            rs.getTimestamp("end_time").toLocalDateTime(),
-                            rs.getString("employee_name")
-                    )
-            );
+            list = jdbcTemplate.query(sql, (rs, rowNum) -> {
+                int workOrderId = rs.getInt("work_order_id");
+
+                String empSql = "select distinct employee_name from process p join employee e on p.employee_id = e.employee_id where work_order_id = ?";
+                List<String> empNameList = jdbcTemplate.query(empSql, new Object[]{workOrderId}, (empRs, empRowNum) -> empRs.getString("employee_name"));
+                String empName = String.join(", ", empNameList);
+
+                String typeSql = "select distinct process_type from process where work_order_id = ?";
+                List<String> psTypeList = jdbcTemplate.query(typeSql, new Object[]{workOrderId}, (typeRs, typeRowNum) -> typeRs.getString("process_type"));
+                String processType = String.join(", ", psTypeList);
+
+                return new ProcessSel(
+                        rs.getInt("process_id"),
+                        rs.getString("product_name"),
+                        processType,
+                        rs.getString("status"),
+                        rs.getInt("quantity"),
+                        rs.getTimestamp("start_time").toLocalDateTime(),
+                        rs.getTimestamp("end_time") != null ? rs.getTimestamp("end_time").toLocalDateTime() : null,
+                        empName,
+                        workOrderId
+                );
+            });
         } catch (Exception e) {
            e.printStackTrace();
         }
