@@ -30,7 +30,7 @@ public class WorkOrderDao {
 
     public List<Wp> selectInProgressWorkOrder() {
         List<Wp> list = null;
-        String sql = "select work_order_id, product_name, quantity, status from work_order w join product p on w.product_id = p.product_id where status = 'IN_PROGRESS' order by work_order_id desc";
+        String sql = "select work_order_id, product_name, quantity, status from work_order w join product p on w.product_id = p.product_id where status = 'IN_PROGRESS' order by work_order_id";
         try {
             list = jdbcTemplate.query(sql, (rs, rowNum) ->
                         new Wp(

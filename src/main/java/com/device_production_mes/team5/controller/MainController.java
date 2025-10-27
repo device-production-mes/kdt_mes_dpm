@@ -37,34 +37,39 @@ public class MainController {
         while (true) {
             System.out.println("[1]제품 관리 [2]자재 관리 [3]직원 관리 [4]작업 등록 [5]공정 관리 [6]완제품 조회 [7]출하 관리 [8]종료");
             System.out.print(">> ");
-            switch (SC.nextInt()) {
-                case 1:
-                    productController();
-                    break;
-                case 2:
-                    bomController();
-                    break;
-                case 3:
-                    employeeController();
-                    break;
-                case 4:
-                    workOrderController();
-                    break;
-                case 5:
-                    processController();
-                    break;
-                case 6:
-                    inventoryController();
-                    break;
-                case 7:
-                    shipmentController();
-                    break;
-                case 8:
-                    System.out.println("프로그램을 종료 합니다.");
-                    return;
-                default:
-                    System.out.println("잘못 입력하셨습니다.");
-                    break;
+            if (SC.hasNextInt()) {
+                switch (SC.nextInt()) {
+                    case 1:
+                        productController();
+                        break;
+                    case 2:
+                        bomController();
+                        break;
+                    case 3:
+                        employeeController();
+                        break;
+                    case 4:
+                        workOrderController();
+                        break;
+                    case 5:
+                        processController();
+                        break;
+                    case 6:
+                        inventoryController();
+                        break;
+                    case 7:
+                        shipmentController();
+                        break;
+                    case 8:
+                        System.out.println("프로그램을 종료 합니다.");
+                        return;
+                    default:
+                        System.out.println("잘못 입력하셨습니다.");
+                        break;
+                }
+            } else {
+                System.out.println("잘못 입력하셨습니다.");
+                SC.nextLine();
             }
         }
     }
@@ -73,24 +78,31 @@ public class MainController {
         while (true) {
             System.out.println("[1]제품 등록 [2]제품 조회 [3]돌아가기");
             System.out.print(">> ");
-            switch (SC.nextInt()) {
-                case 1:
-                    boolean result = productDao.insertProduct();
-                    System.out.println(result ? "정상 등록 되었습니다." : "등록 실패");
-                    break;
-                case 2:
-                    List<Product> list = productDao.selectProducts();
-                    System.out.println("제품ID \t 제품명 \t\t\t\t 모델명");
-                    for (Product product : list) {
-                        System.out.println(product.getProduct_id() + " \t " + product.getProduct_name() + " \t\t " + product.getModel_number());
-                    }
-                    break;
-                case 3:
-                    return;
-                default:
-                    System.out.println("잘못 입력하셨습니다.");
-                    break;
+            if (SC.hasNextInt()) {
+                switch (SC.nextInt()) {
+                    case 1:
+                        boolean result = productDao.insertProduct();
+                        System.out.println(result ? "정상 등록 되었습니다." : "등록 실패");
+                        break;
+                    case 2:
+                        List<Product> list = productDao.selectProducts();
+                        System.out.println("제품ID \t 제품명 \t\t\t\t 모델명");
+                        for (Product product : list) {
+                            System.out.println(product.getProduct_id() + " \t " + product.getProduct_name() + " \t\t " + product.getModel_number());
+                        }
+                        break;
+                    case 3:
+                        return;
+                    default:
+                        System.out.println("잘못 입력하셨습니다.");
+                        break;
+                }
+            } else {
+                System.out.println("잘못 입력하셨습니다.");
+                SC.nextLine();
+                continue;
             }
+            break;
         }
     }
 
@@ -98,28 +110,34 @@ public class MainController {
         while (true) {
             System.out.println("[1]자재 입고 [2]자재 조회 [3]돌아가기");
             System.out.print(">> ");
-            switch (SC.nextInt()) {
-                case 1:
-                    List<Part> list = bomDao.selectPart();
-                    System.out.println("자재id\t자재명");
-                    for (Part part : list) {
-                        System.out.println(part);
-                    }
-                    System.out.println("추가할 자재의 id를 입력해 주세요: ");
-                    System.out.print(">> ");
-                    bomDao.addQuantity(SC.nextInt());
-                    break;
-                case 2:
-                    List<Quantity> list2 = bomDao.selectBomDetail();
-                    System.out.printf("%-12s | %5s\n", "자재명", "수량");
-                    for (Quantity quantity : list2) {
-                        System.out.printf("%-12s | %6d\n", quantity.getPart_name(), quantity.getQuantity());
-                    }
-                    break;
-                case 3:
-                    return;
-                default:
-                    break;
+            if (SC.hasNextInt()) {
+                switch (SC.nextInt()) {
+                    case 1:
+                        List<Part> list = bomDao.selectPart();
+                        System.out.println("자재id\t자재명");
+                        for (Part part : list) {
+                            System.out.println(part);
+                        }
+                        System.out.println("추가할 자재의 id를 입력해 주세요: ");
+                        System.out.print(">> ");
+                        bomDao.addQuantity(SC.nextInt());
+                        break;
+                    case 2:
+                        List<Quantity> list2 = bomDao.selectBomDetail();
+                        System.out.printf("%-12s | %5s\n", "자재명", "수량");
+                        for (Quantity quantity : list2) {
+                            System.out.printf("%-12s | %6d\n", quantity.getPart_name(), quantity.getQuantity());
+                        }
+                        break;
+                    case 3:
+                        return;
+                    default:
+                        break;
+                }
+            } else {
+                System.out.println("잘못 입력하셨습니다.");
+                SC.nextLine();
+                continue;
             }
             break;
         }
@@ -300,10 +318,10 @@ public class MainController {
                     if (list.isEmpty()) {
                         System.out.println("생산된 완제품이 없습니다.");
                     } else {
+                        System.out.println("제품id\t제품명");
                         for (Product product : list) {
                             System.out.println(product.getProduct_id() + "\t\t" + product.getProduct_name());
                         }
-                        System.out.println("제품id\t제품명");
                         System.out.println("출하 하실 제품의 id를 입력해 주세요.");
                         System.out.print(">> ");
                         int product_id = SC.nextInt();
